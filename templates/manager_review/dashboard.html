@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Manager Review Dashboard
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<style>
+
+.page-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+
+}
+
+
+.stat-grid{
+
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+
+}
+
+
+
+.stat-card{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:22px;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.08);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    transition:.3s;
+
+}
+
+
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+
+.stat-icon{
+
+    font-size:40px;
+
+    opacity:.25;
+
+}
+
+
+
+.stat-value{
+
+    font-size:32px;
+
+    font-weight:700;
+
+}
+
+
+
+.stat-title{
+
+    color:#777;
+
+}
+
+
+
+.review-card{
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.08);
+
+    margin-top:30px;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+
+</style>
+
+
+
+
+<div class="page-header">
+
+
+    <div>
+
+        <h2>
+
+            <i class="fas fa-user-check"></i>
+
+            Manager Review Dashboard
+
+        </h2>
+
+
+        <p class="text-muted">
+
+            Review employee weekly plans and activities.
+
+        </p>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+
+<!-- ==========================
+     STATISTICS
+=========================== -->
+
+
+<div class="stat-grid">
+
+
+
+<div class="stat-card">
+
+
+<div>
+
+<div class="stat-value">
+
+{{ stats.employees }}
+
+</div>
+
+
+<div class="stat-title">
+
+Employees
+
+</div>
+
+
+</div>
+
+
+<i class="fas fa-users stat-icon text-primary"></i>
+
+
+</div>
+
+
+
+
+
+<div class="stat-card">
+
+
+<div>
+
+<div class="stat-value">
+
+{{ stats.pending_plans }}
+
+</div>
+
+
+<div class="stat-title">
+
+Pending Plans
+
+</div>
+
+
+</div>
+
+
+<i class="fas fa-clock stat-icon text-warning"></i>
+
+
+</div>
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div>
+
+<div class="stat-value">
+
+{{ stats.active_plans }}
+
+</div>
+
+
+<div class="stat-title">
+
+Active Plans
+
+</div>
+
+
+</div>
+
+
+<i class="fas fa-play-circle stat-icon text-info"></i>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div>
+
+<div class="stat-value">
+
+{{ stats.pending_reviews }}
+
+</div>
+
+
+<div class="stat-title">
+
+Activities Awaiting Review
+
+</div>
+
+
+</div>
+
+
+<i class="fas fa-tasks stat-icon text-danger"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- ==========================
+     REVIEW QUEUE
+=========================== -->
+
+
+<div class="review-card">
+
+
+<h4 class="mb-3">
+
+<i class="fas fa-file-alt"></i>
+
+Plans Waiting For Review
+
+</h4>
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table align-middle">
+
+
+<thead class="table-dark">
+
+
+<tr>
+
+<th>#</th>
+
+<th>Employee</th>
+
+<th>Week</th>
+
+<th>Status</th>
+
+<th>Submitted</th>
+
+<th></th>
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody>
+
+
+{% if plans %}
+
+
+
+{% for plan in plans %}
+
+
+<tr>
+
+
+<td>
+
+{{ loop.index }}
+
+</td>
+
+
+
+
+<td>
+
+
+<strong>
+
+{{ plan.employee.full_name }}
+
+</strong>
+
+
+<br>
+
+<small class="text-muted">
+
+{{ plan.employee.email }}
+
+</small>
+
+
+</td>
+
+
+
+
+
+<td>
+
+Week {{ plan.week_number }}
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-warning">
+
+Pending Review
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+{{ plan.created_at.strftime("%d %b %Y") }}
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<a href="{{ url_for(
+'manager_review.review',
+plan_id=plan.id
+)}}"
+
+class="btn btn-primary btn-sm">
+
+
+<i class="fas fa-eye"></i>
+
+Review
+
+
+</a>
+
+
+</td>
+
+
+
+</tr>
+
+
+{% endfor %}
+
+
+
+
+
+{% else %}
+
+
+<tr>
+
+<td colspan="6"
+class="text-center py-5">
+
+
+<i class="fas fa-check-circle fa-3x text-success"></i>
+
+
+<h5 class="mt-3">
+
+No pending reviews
+
+</h5>
+
+
+<p class="text-muted">
+
+All employee submissions have been reviewed.
+
+</p>
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endif %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% endblock %}

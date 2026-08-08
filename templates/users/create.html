@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create User
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2>
+            <i class="fas fa-user-plus me-2"></i>
+            Create New User
+        </h2>
+
+        <p class="text-muted">
+            Register a new employee, operations manager or system administrator.
+        </p>
+
+    </div>
+
+
+    <a href="{{ url_for('user.index') }}"
+       class="btn btn-secondary">
+
+        <i class="fas fa-arrow-left me-1"></i>
+        Back To Users
+
+    </a>
+
+
+</div>
+
+
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+
+
+<!-- ================= PERSONAL INFORMATION ================= -->
+
+
+<div class="card mb-4">
+
+
+<div class="card-header">
+
+<h3>
+<i class="fas fa-id-card me-2"></i>
+Personal Information
+</h3>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<div class="form-grid">
+
+
+
+<div class="form-group">
+
+<label>
+Employee Number
+</label>
+
+<input type="text"
+       class="form-control"
+       value="Generated automatically"
+       readonly>
+
+<small class="text-muted">
+Generated according to user role.
+</small>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>
+Email Address
+</label>
+
+<input type="email"
+       name="email"
+       class="form-control"
+       required>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+First Name
+</label>
+
+<input type="text"
+       name="first_name"
+       class="form-control"
+       required>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Middle Name
+</label>
+
+<input type="text"
+       name="middle_name"
+       class="form-control">
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Last Name
+</label>
+
+<input type="text"
+       name="last_name"
+       class="form-control"
+       required>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Phone Number
+</label>
+
+<input type="text"
+       name="phone"
+       class="form-control"
+       placeholder="+2547XXXXXXXX">
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- ================= EMPLOYMENT INFORMATION ================= -->
+
+
+<div class="card mb-4">
+
+
+<div class="card-header">
+
+<h3>
+
+<i class="fas fa-briefcase me-2"></i>
+
+Employment Information
+
+</h3>
+
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<div class="form-grid">
+
+
+
+<div class="form-group">
+
+
+<label>
+User Role
+</label>
+
+
+<select name="role"
+        id="role"
+        class="form-control"
+        required>
+
+
+<option value="">
+Select Role
+</option>
+
+
+
+{% for role in roles %}
+
+<option value="{{ role.value }}">
+
+{{ role.value.replace("_"," ").title() }}
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Department
+</label>
+
+
+
+<select name="department_id"
+        id="department_id"
+        class="form-control">
+
+
+<option value="">
+Select Department
+</option>
+
+
+
+{% for department in departments %}
+
+
+<option value="{{ department.id }}">
+
+{{ department.department_name }}
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+<small class="text-muted">
+
+Employees automatically inherit the department manager.
+
+</small>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ================= ACCOUNT INFORMATION ================= -->
+
+
+
+<div class="card mb-4">
+
+
+<div class="card-header">
+
+<h3>
+
+<i class="fas fa-user-shield me-2"></i>
+
+Account Information
+
+</h3>
+
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<div class="form-grid">
+
+
+
+<div class="form-group">
+
+
+<label>
+Password
+</label>
+
+
+<input type="password"
+       name="password"
+       id="password"
+       class="form-control"
+       required>
+
+
+<small class="text-muted">
+Minimum 8 characters recommended.
+</small>
+
+
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Confirm Password
+</label>
+
+
+
+<input type="password"
+       id="confirm_password"
+       class="form-control"
+       required>
+
+
+<small id="password_message"
+       class="text-muted">
+</small>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ================= PROFILE PHOTO ================= -->
+
+
+
+<div class="card mb-4">
+
+
+
+
+<div class="card-body">
+
+
+<div class="form-grid">
+
+
+<div class="form-group">
+
+
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ================= ACTIONS ================= -->
+
+
+
+<div class="card">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+
+<a href="{{ url_for('user.index') }}"
+class="btn btn-secondary">
+
+<i class="fas fa-times me-1"></i>
+
+Cancel
+
+</a>
+
+
+
+
+
+<div>
+
+
+<button type="reset"
+class="btn btn-warning">
+
+<i class="fas fa-undo me-1"></i>
+
+Reset
+
+</button>
+
+
+
+
+
+<button type="submit"
+class="btn btn-primary">
+
+
+<i class="fas fa-save me-1"></i>
+
+Create User
+
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</form>
+
+
+
+{% endblock %}

@@ -1,0 +1,885 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+
+<!-- =====================================================
+ EMPLOYEE HEADER
+===================================================== -->
+
+
+<div class="card shadow-sm mb-4">
+
+
+<div class="card-body">
+
+
+<div class="row align-items-center">
+
+
+<div class="col-md-8">
+
+
+<h2>
+
+<i class="bi bi-person-badge"></i>
+
+{{employee.first_name}}
+
+{{employee.last_name}}
+
+</h2>
+
+
+<p class="text-muted mb-1">
+
+Employee Number:
+
+<strong>
+
+{{employee.employee_number}}
+
+</strong>
+
+</p>
+
+
+<p class="text-muted">
+
+Department:
+
+{{employee.department.name if employee.department else "N/A"}}
+
+</p>
+
+
+
+</div>
+
+
+
+
+<div class="col-md-4 text-end">
+
+
+<h1 class="text-primary">
+
+{{performance.overall_percentage}}%
+
+</h1>
+
+
+<span class="badge bg-success fs-5">
+
+Grade {{performance.grade}}
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+ SCORE CARDS
+===================================================== -->
+
+
+<div class="row g-3 mb-4">
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+
+Overall Performance
+
+</h6>
+
+
+<h2>
+
+{{performance.overall_percentage}}%
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+
+Activity Score
+
+</h6>
+
+
+<h2>
+
+{{performance.activity_score}}%
+
+</h2>
+
+
+<small>
+
+Employee Planning
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+
+Assigned Tasks
+
+</h6>
+
+
+<h2>
+
+{{performance.assigned_task_score}}%
+
+</h2>
+
+
+<small>
+
+Execution
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+
+Company Rank
+
+</h6>
+
+
+<h2>
+
+#{{performance.company_rank}}
+
+</h2>
+
+
+<small>
+
+Position
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ PERFORMANCE COMPARISON
+===================================================== -->
+
+
+<div class="row mb-4">
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Normal Activities Performance
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<h5>
+
+{{performance.activity_score}}%
+
+</h5>
+
+
+
+<div class="progress mb-3"
+style="height:25px;">
+
+
+<div class="progress-bar"
+
+style="width:{{performance.activity_score}}%">
+
+
+{{performance.activity_score}}%
+
+
+</div>
+
+
+</div>
+
+
+
+<p class="text-muted">
+
+Based on employee planned activities,
+weekly plans and manager reviews.
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Assigned Task Performance
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<h5>
+
+{{performance.assigned_task_score}}%
+
+</h5>
+
+
+
+<div class="progress mb-3"
+style="height:25px;">
+
+
+<div class="progress-bar bg-success"
+
+style="width:{{performance.assigned_task_score}}%">
+
+
+{{performance.assigned_task_score}}%
+
+
+</div>
+
+
+</div>
+
+
+
+<p class="text-muted">
+
+Based on assigned tasks,
+completion, verification and quality.
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ ASSIGNED TASK DETAILS
+===================================================== -->
+
+
+<div class="card shadow-sm mb-4">
+
+
+<div class="card-header">
+
+
+<h5>
+
+Assigned Task Statistics
+
+</h5>
+
+
+</div>
+
+
+
+<div class="card-body">
+
+
+{% if employee.assigned_task_performance %}
+
+
+<div class="row text-center">
+
+
+
+<div class="col-md-3">
+
+<h3>
+
+{{employee.assigned_task_performance.total_tasks}}
+
+</h3>
+
+<p>
+
+Total Tasks
+
+</p>
+
+</div>
+
+
+
+
+
+<div class="col-md-3">
+
+<h3 class="text-success">
+
+{{employee.assigned_task_performance.verified_tasks}}
+
+</h3>
+
+<p>
+
+Verified
+
+</p>
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+<h3 class="text-warning">
+
+{{employee.assigned_task_performance.rejected_tasks}}
+
+</h3>
+
+<p>
+
+Rejected
+
+</p>
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+<h3>
+
+{{employee.assigned_task_performance.overall_rating}}
+
+⭐
+
+</h3>
+
+<p>
+
+Rating
+
+</p>
+
+</div>
+
+
+
+</div>
+
+
+
+<hr>
+
+
+
+<div class="row">
+
+
+<div class="col-md-4">
+
+
+<strong>
+Completion Rate
+</strong>
+
+
+<div class="progress">
+
+<div class="progress-bar bg-info"
+
+style="width:{{employee.assigned_task_performance.completion_percentage}}%">
+
+
+{{employee.assigned_task_performance.completion_percentage}}%
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<strong>
+Verification Rate
+</strong>
+
+
+<div class="progress">
+
+<div class="progress-bar bg-success"
+
+style="width:{{employee.assigned_task_performance.verification_percentage}}%">
+
+
+{{employee.assigned_task_performance.verification_percentage}}%
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<strong>
+Success Rate
+</strong>
+
+
+<div class="progress">
+
+<div class="progress-bar bg-primary"
+
+style="width:{{employee.assigned_task_performance.success_percentage}}%">
+
+
+{{employee.assigned_task_performance.success_percentage}}%
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% else %}
+
+
+<p class="text-muted">
+
+No assigned task performance available.
+
+</p>
+
+
+{% endif %}
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ RATINGS
+===================================================== -->
+
+
+<div class="row mb-4">
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Manager Ratings
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<table class="table">
+
+
+<tr>
+
+<td>
+Quality
+</td>
+
+<td>
+
+{{employee.assigned_task_performance.average_quality
+if employee.assigned_task_performance else 0}}
+
+⭐
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+Timeliness
+</td>
+
+<td>
+
+{{employee.assigned_task_performance.average_timeliness
+if employee.assigned_task_performance else 0}}
+
+⭐
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+Overall Rating
+</td>
+
+<td>
+
+{{employee.assigned_task_performance.overall_rating
+if employee.assigned_task_performance else 0}}
+
+⭐
+
+</td>
+
+</tr>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Performance Actions
+
+</div>
+
+
+<div class="card-body">
+
+
+<a href="{{url_for(
+
+'performance.activity_report',
+
+employee_id=employee.id
+
+)}}"
+
+class="btn btn-outline-primary w-100 mb-2">
+
+
+<i class="bi bi-list-check"></i>
+
+View Activities
+
+
+</a>
+
+
+
+
+
+<a href="{{url_for(
+
+'performance.assigned_task_report',
+
+employee_id=employee.id
+
+)}}"
+
+class="btn btn-outline-success w-100">
+
+
+<i class="bi bi-clipboard-check"></i>
+
+View Assigned Tasks
+
+
+</a>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ FOOTER
+===================================================== -->
+
+
+<div class="alert alert-info">
+
+
+<i class="bi bi-info-circle"></i>
+
+
+Performance is calculated from:
+
+
+<strong>
+30% Employee Activities
+</strong>
+
++
+
+<strong>
+70% Assigned Tasks
+</strong>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+{% endblock %}

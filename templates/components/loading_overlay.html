@@ -1,0 +1,159 @@
+<div id="loadingOverlay"
+     class="loading-overlay">
+
+
+<div class="loader-box">
+
+
+<div class="spinner"></div>
+
+
+<h5>
+Processing...
+</h5>
+
+
+<p>
+Please wait
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<style>
+
+.loading-overlay {
+
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+
+background:
+rgba(255,255,255,0.85);
+
+
+display:none;
+
+
+align-items:center;
+
+justify-content:center;
+
+
+z-index:9999;
+
+
+}
+
+
+
+.loader-box {
+
+
+background:white;
+
+
+padding:35px;
+
+
+border-radius:15px;
+
+
+text-align:center;
+
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.15);
+
+
+}
+
+
+
+.spinner {
+
+
+width:50px;
+
+height:50px;
+
+
+border-radius:50%;
+
+
+border:5px solid #e5e7eb;
+
+
+border-top-color:#2563eb;
+
+
+animation:
+spin 1s linear infinite;
+
+
+margin:auto auto 15px;
+
+
+}
+
+
+
+@keyframes spin {
+
+
+from{
+
+transform:rotate(0deg);
+
+}
+
+
+to{
+
+transform:rotate(360deg);
+
+}
+
+
+}
+
+
+
+.loader-box h5{
+
+
+margin-bottom:5px;
+
+
+}
+
+
+
+.loader-box p{
+
+
+color:#6b7280;
+
+
+font-size:14px;
+
+
+}
+
+
+
+</style>

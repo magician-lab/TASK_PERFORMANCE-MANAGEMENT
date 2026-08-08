@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block title %}
+Departments
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h2>
+
+            <i class="fas fa-building"></i>
+
+            Department Management
+
+        </h2>
+
+        <p>
+
+            Manage organizational departments.
+
+        </p>
+
+    </div>
+
+    <div>
+
+        <a href="{{ url_for('department.create') }}"
+           class="btn btn-primary">
+
+            <i class="fas fa-plus"></i>
+
+            Add Department
+
+        </a>
+
+    </div>
+
+</div>
+
+<!-- ======================================================= -->
+<!-- STATISTICS -->
+<!-- ======================================================= -->
+
+<div class="dashboard-grid">
+
+    <div class="stat-card">
+
+        <h2>{{ stats.total }}</h2>
+
+        <p>Total Departments</p>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h2>{{ stats.active }}</h2>
+
+        <p>Active</p>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h2>{{ stats.inactive }}</h2>
+
+        <p>Inactive</p>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- ======================================================= -->
+<!-- SEARCH -->
+<!-- ======================================================= -->
+
+<div class="card">
+
+    <div class="card-body">
+
+        <form method="GET"
+              action="{{ url_for('department.search') }}">
+
+            <div class="input-group">
+
+                <input
+
+                    type="text"
+
+                    name="q"
+
+                    class="form-control"
+
+                    placeholder="Search department..."
+
+                    value="{{ query or '' }}">
+
+                <button
+                    class="btn btn-primary">
+
+                    <i class="fas fa-search"></i>
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- ======================================================= -->
+<!-- TABLE -->
+<!-- ======================================================= -->
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>
+
+            Department List
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        {% if departments %}
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Department</th>
+
+                    <th>Code</th>
+
+                    <th>Manager</th>
+
+                    <th>Employees</th>
+
+                    <th>Status</th>
+
+                    <th width="220">
+
+                        Actions
+
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for department in departments %}
+
+                <tr>
+
+                    <td>
+
+                        {{ loop.index }}
+
+                    </td>
+
+                    <td>
+
+                        <strong>
+
+                            {{ department.department_name }}
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        {{ department.department_code }}
+
+                    </td>
+
+                    <td>
+
+                        {{ department.manager_name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ department.employee_count }}
+
+                    </td>
+
+                    <td>
+
+                        {% if department.active %}
+
+                            <span class="badge badge-success">
+
+                                Active
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-danger">
+
+                                Inactive
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{{ url_for('department.edit', department_id=department.id) }}"
+                           class="btn btn-warning btn-sm">
+
+                            <i class="fas fa-edit"></i>
+
+                        </a>
+
+                        {% if department.active %}
+
+                        <a href="{{ url_for('department.deactivate', department_id=department.id) }}"
+                           class="btn btn-secondary btn-sm">
+
+                            <i class="fas fa-ban"></i>
+
+                        </a>
+
+                        {% else %}
+
+                        <a href="{{ url_for('department.activate', department_id=department.id) }}"
+                           class="btn btn-success btn-sm">
+
+                            <i class="fas fa-check"></i>
+
+                        </a>
+
+                        {% endif %}
+
+                        <a href="{{ url_for('department.delete', department_id=department.id) }}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this department?');">
+
+                            <i class="fas fa-trash"></i>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <i class="fas fa-building fa-4x mb-3"></i>
+
+            <h3>
+
+                No Departments Found
+
+            </h3>
+
+            <p>
+
+                Start by creating your first department.
+
+            </p>
+
+            <a href="{{ url_for('department.create') }}"
+               class="btn btn-primary">
+
+                <i class="fas fa-plus"></i>
+
+                Create Department
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

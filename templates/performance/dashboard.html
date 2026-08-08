@@ -1,0 +1,478 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+<!-- =========================
+ HEADER
+========================= -->
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+<h2>
+<i class="bi bi-bar-chart-line"></i>
+My Performance
+</h2>
+
+
+<p class="text-muted">
+Your current productivity and achievement score
+</p>
+
+</div>
+
+
+<div>
+
+<span class="badge bg-primary fs-6">
+
+{{ performance.grade }}
+
+</span>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- =========================
+ SCORE CARDS
+========================= -->
+
+
+<div class="row g-3">
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+Overall Score
+</h6>
+
+
+<h1 class="text-primary">
+
+{{ performance.overall_percentage }}%
+
+</h1>
+
+
+<p>
+Performance Rating
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+Activity Score
+</h6>
+
+
+<h2>
+
+{{ performance.activity_score }}%
+
+</h2>
+
+
+<small>
+Employee Planning
+</small>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+Assigned Tasks
+</h6>
+
+
+<h2>
+
+{{ performance.assigned_task_score }}%
+
+</h2>
+
+
+<small>
+Execution Score
+</small>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h6>
+Company Rank
+</h6>
+
+
+<h2>
+
+#{{ performance.company_rank }}
+
+</h2>
+
+
+<small>
+Overall Ranking
+</small>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =========================
+ PROGRESS
+========================= -->
+
+
+<div class="row mt-4">
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Activity Performance
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<div class="progress mb-3"
+style="height:25px;">
+
+
+<div class="progress-bar"
+style="width:{{performance.activity_score}}%">
+
+
+{{performance.activity_score}}%
+
+
+</div>
+
+
+</div>
+
+
+<p>
+
+Measures:
+
+<ul>
+
+<li>
+Weekly planning consistency
+</li>
+
+<li>
+Quality of submitted activities
+</li>
+
+<li>
+Manager verification scores
+</li>
+
+
+</ul>
+
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Assigned Task Performance
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<div class="progress mb-3"
+style="height:25px;">
+
+
+<div class="progress-bar bg-success"
+
+style="width:{{performance.assigned_task_score}}%">
+
+
+{{performance.assigned_task_score}}%
+
+
+</div>
+
+
+</div>
+
+
+
+
+<ul>
+
+<li>
+Task completion
+</li>
+
+<li>
+Quality rating
+</li>
+
+<li>
+Timeliness
+</li>
+
+<li>
+Manager approval
+</li>
+
+
+</ul>
+
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- =========================
+ SUMMARY
+========================= -->
+
+
+<div class="card shadow-sm mt-4">
+
+
+<div class="card-header">
+
+Performance Summary
+
+</div>
+
+
+<div class="card-body">
+
+
+<table class="table">
+
+
+<tr>
+
+<th>
+Metric
+</th>
+
+
+<th>
+Score
+</th>
+
+
+</tr>
+
+
+
+<tr>
+
+<td>
+Self Planned Activities
+</td>
+
+<td>
+
+{{performance.activity_score}}%
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+Assigned Work Execution
+</td>
+
+<td>
+
+{{performance.assigned_task_score}}%
+
+</td>
+
+</tr>
+
+
+
+<tr class="table-primary">
+
+<td>
+
+<strong>
+Overall Performance
+</strong>
+
+</td>
+
+
+<td>
+
+<strong>
+
+{{performance.overall_percentage}}%
+
+</strong>
+
+</td>
+
+</tr>
+
+
+
+</table>
+
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+{% endblock %}

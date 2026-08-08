@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+
+{% block title %}
+Weekly Plan Details
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>
+                <i class="fas fa-calendar-check text-primary"></i>
+                Weekly Plan
+            </h2>
+
+            <p class="text-muted">
+                {{ plan.week_start }} - {{ plan.week_end }}
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('weekly_plan.dashboard') }}"
+           class="btn btn-secondary">
+
+            <i class="fas fa-arrow-left"></i>
+            Back
+
+        </a>
+
+    </div>
+
+
+    <!-- Employee Details -->
+
+    <div class="card mb-4">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                Employee Information
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <strong>Name</strong><br>
+
+                    {{ plan.employee.full_name }}
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <strong>Department</strong><br>
+
+                    {% if plan.employee.department %}
+                        {{ plan.employee.department.department_name }}
+                    {% else %}
+                        Not Assigned
+                    {% endif %}
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <strong>Status</strong><br>
+
+                    <span class="badge bg-primary">
+
+                        {{ plan.status.value }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Objectives -->
+
+    <div class="card mb-4">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                Weekly Objectives
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            {{ plan.objectives }}
+
+            {% if plan.notes %}
+
+            <hr>
+
+            <strong>Notes</strong>
+
+            <p>{{ plan.notes }}</p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Activities -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                My Activities
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if plan.activities %}
+
+                {% for activity in plan.activities %}
+
+                <div class="border rounded p-3 mb-4">
+
+                    <div class="d-flex justify-content-between">
+
+                        <h5>
+
+                            {{ loop.index }}.
+                            {{ activity.title }}
+
+                        </h5>
+
+                        <span class="badge bg-info">
+
+                            {{ activity.priority.value }}
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        {{ activity.description }}
+
+                    </p>
+
+                    <div class="row mb-3">
+
+                        <div class="col-md-4">
+
+                            <strong>Date</strong><br>
+
+                            {{ activity.activity_date }}
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <strong>Status</strong><br>
+
+                            {% if activity.employee_status.value=="DONE" %}
+
+                                <span class="badge bg-success">
+
+                                    Completed
+
+                                </span>
+
+                            {% elif activity.employee_status.value=="NOT_DONE" %}
+
+                                <span class="badge bg-danger">
+
+                                    Not Completed
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-warning">
+
+                                    Pending
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <strong>Verification</strong><br>
+
+                            {{ activity.verification_status.value }}
+
+                        </div>
+
+                    </div>
+
+
+                    {% if activity.employee_status.value == "PENDING" %}
+
+                    <form method="POST"
+                          action="{{ url_for('weekly_plan.complete_activity', activity_id=activity.id) }}"
+                          enctype="multipart/form-data">
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Completion Status
+
+                            </label>
+
+                            <select
+                                class="form-select"
+                                name="status"
+                                required>
+
+                                <option value="DONE">
+
+                                    Completed
+
+                                </option>
+
+                                <option value="NOT_DONE">
+
+                                    Not Completed
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Completion Notes
+
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                rows="3"
+                                name="completion_notes"></textarea>
+
+                        </div>
+
+  
+                        <button
+                            class="btn btn-success">
+
+                            <i class="fas fa-save"></i>
+
+                            Save Progress
+
+                        </button>
+
+                    </form>
+
+                    {% else %}
+
+                    <div class="alert alert-success mb-0">
+
+                        <i class="fas fa-lock"></i>
+
+                        <strong>This activity has already been submitted.</strong>
+
+                        <hr>
+
+                        <strong>Completion Notes</strong>
+
+                        <p>
+
+                            {{ activity.completion_notes or "None" }}
+
+                        </p>
+
+                    
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+            <div class="alert alert-info">
+
+                No activities have been added to this plan.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Manager Review -->
+
+    <div class="card mt-4">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                Manager Review
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <strong>Reviewed</strong><br>
+
+                    {% if plan.reviewed %}
+
+                        Yes
+
+                    {% else %}
+
+                        Pending
+
+                    {% endif %}
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <strong>Reviewer</strong><br>
+
+                    {% if plan.reviewer %}
+
+                        {{ plan.reviewer.full_name }}
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <strong>Average Rating</strong><br>
+
+                    {{ plan.average_rating or 0 }}/5
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

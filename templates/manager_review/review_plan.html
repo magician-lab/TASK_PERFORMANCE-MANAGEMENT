@@ -1,0 +1,950 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Review Weekly Plan
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<style>
+
+
+.page-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+
+}
+
+
+
+.info-card{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.08);
+
+    margin-bottom:25px;
+
+}
+
+
+
+.employee-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+
+
+.avatar{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:bold;
+
+    font-size:20px;
+
+}
+
+
+
+.activity-card{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,.08);
+
+}
+
+
+
+.activity-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+
+.badge-status{
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+
+
+.pending{
+
+    background:#fff3cd;
+
+    color:#856404;
+
+}
+
+
+
+.verified{
+
+    background:#d1e7dd;
+
+    color:#0f5132;
+
+}
+
+
+
+.rejected{
+
+    background:#f8d7da;
+
+    color:#842029;
+
+}
+
+
+
+.notdone{
+
+    background:#e2e3e5;
+
+    color:#41464b;
+
+}
+
+
+
+.action-box{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:15px;
+
+}
+
+
+
+
+</style>
+
+
+
+
+
+<!-- HEADER -->
+
+<div class="page-header">
+
+
+<div>
+
+<h2>
+
+<i class="fas fa-clipboard-check"></i>
+
+Review Weekly Plan
+
+</h2>
+
+
+<p class="text-muted">
+
+Verify employee activities and approve submission.
+
+</p>
+
+
+</div>
+
+
+
+<a href="{{ url_for('manager_review.dashboard') }}"
+
+class="btn btn-secondary">
+
+
+<i class="fas fa-arrow-left"></i>
+
+Back
+
+</a>
+
+
+</div>
+
+
+
+
+
+<!-- EMPLOYEE DETAILS -->
+
+
+<div class="info-card">
+
+
+<div class="employee-box">
+
+
+<div class="avatar">
+
+{{ plan.employee.first_name[0] }}
+
+{{ plan.employee.last_name[0] }}
+
+</div>
+
+
+
+<div>
+
+
+<h4 class="mb-0">
+
+{{ plan.employee.full_name }}
+
+</h4>
+
+
+<small class="text-muted">
+
+{{ plan.employee.email }}
+
+</small>
+
+
+<br>
+
+
+<span class="badge bg-primary">
+
+{{ plan.employee.department.department_name
+if plan.employee.department
+else "No Department"
+}}
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- PLAN DETAILS -->
+
+
+<div class="info-card">
+
+
+<div class="row">
+
+
+<div class="col-md-4">
+
+
+<strong>
+
+Week Number
+
+</strong>
+
+
+<p>
+
+Week {{ plan.week_number }}
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<strong>
+
+Plan Status
+
+</strong>
+
+
+<p>
+
+
+{% if plan.status.name == "SUBMITTED" %}
+
+
+<span class="badge bg-warning">
+
+Submitted
+
+</span>
+
+
+{% elif plan.status.name == "ACTIVE" %}
+
+
+<span class="badge bg-success">
+
+Active
+
+</span>
+
+
+{% else %}
+
+
+<span class="badge bg-secondary">
+
+{{ plan.status.name }}
+
+</span>
+
+
+{% endif %}
+
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<strong>
+
+Submitted Date
+
+</strong>
+
+
+<p>
+
+{{ plan.created_at.strftime("%d %B %Y") }}
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ACTIVITIES -->
+
+<h4 class="mb-3">
+
+<i class="fas fa-tasks"></i>
+
+Activities
+
+</h4>
+
+
+
+
+
+{% for activity in plan.activities %}
+
+
+
+<div class="activity-card">
+
+
+
+<div class="activity-header">
+
+
+<div>
+
+
+<h5>
+
+{{ activity.title }}
+
+</h5>
+
+
+<small class="text-muted">
+
+{{ activity.activity_date }}
+
+</small>
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+{% if activity.verification_status.name == "PENDING" %}
+
+<span class="badge-status pending">
+
+Pending Review
+
+</span>
+
+
+
+{% elif activity.verification_status.name == "VERIFIED" %}
+
+
+<span class="badge-status verified">
+
+Verified
+
+</span>
+
+
+
+{% elif activity.verification_status.name == "REJECTED" %}
+
+
+<span class="badge-status rejected">
+
+Rejected
+
+</span>
+
+
+{% endif %}
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<hr>
+
+
+
+
+<p>
+
+{{ activity.description }}
+
+</p>
+
+
+
+
+
+<div class="row">
+
+
+<div class="col-md-4">
+
+
+<strong>
+
+Employee Status
+
+</strong>
+
+
+<br>
+
+
+{% if activity.employee_status.name == "DONE" %}
+
+
+<span class="badge bg-success">
+
+Completed
+
+</span>
+
+
+
+{% else %}
+
+
+<span class="badge bg-secondary">
+
+Not Completed
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+<div class="col-md-4">
+
+
+<strong>
+
+Priority
+
+</strong>
+
+
+<br>
+
+
+<span class="badge bg-info">
+
+{{ activity.priority.name }}
+
+</span>
+
+
+</div>
+
+
+
+
+<div class="col-md-4">
+
+
+<strong>
+
+Final Status
+
+</strong>
+
+
+<br>
+
+
+<span class="badge bg-dark">
+
+{{ activity.final_status.name }}
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- MANAGER ACTIONS -->
+
+{% if activity.verification_status.name == "PENDING" %}
+
+
+
+<div class="action-box">
+
+
+<a href="{{ url_for(
+'manager_review.approve_activity_route',
+activity_id=activity.id
+)}}"
+
+class="btn btn-success">
+
+
+<i class="fas fa-check"></i>
+
+Approve
+
+
+</a>
+
+
+
+
+
+
+<button class="btn btn-danger"
+
+data-bs-toggle="modal"
+
+data-bs-target="#reject{{ activity.id }}">
+
+
+<i class="fas fa-times"></i>
+
+Reject
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<!-- Reject Modal -->
+
+
+<div class="modal fade"
+
+id="reject{{ activity.id }}">
+
+
+<div class="modal-dialog">
+
+
+<div class="modal-content">
+
+
+<form method="POST"
+
+action="{{ url_for(
+'manager_review.reject_activity_route',
+activity_id=activity.id
+)}}">
+
+
+
+<div class="modal-header">
+
+
+<h5>
+
+Reject Activity
+
+</h5>
+
+
+<button type="button"
+
+class="btn-close"
+
+data-bs-dismiss="modal">
+
+</button>
+
+
+</div>
+
+
+
+
+<div class="modal-body">
+
+
+<label>
+
+Reason for rejection
+
+</label>
+
+
+<textarea
+
+name="comments"
+
+class="form-control"
+
+rows="4"
+
+required></textarea>
+
+
+</div>
+
+
+
+
+
+<div class="modal-footer">
+
+
+<button type="button"
+
+class="btn btn-secondary"
+
+data-bs-dismiss="modal">
+
+Cancel
+
+</button>
+
+
+
+<button class="btn btn-danger">
+
+Reject Activity
+
+</button>
+
+
+</div>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+{% endfor %}
+
+
+
+
+
+
+<!-- PLAN ACTIONS -->
+
+{% if plan.status.name == "SUBMITTED" %}
+
+
+<div class="info-card text-center">
+
+
+<h5>
+
+Finalize Weekly Plan
+
+</h5>
+
+
+
+<a href="{{ url_for(
+'manager_review.approve_plan_route',
+plan_id=plan.id
+)}}"
+
+class="btn btn-success">
+
+
+<i class="fas fa-check-circle"></i>
+
+Approve Plan
+
+
+</a>
+
+
+
+
+<button class="btn btn-warning"
+
+data-bs-toggle="modal"
+
+data-bs-target="#returnPlan">
+
+
+<i class="fas fa-undo"></i>
+
+Return Plan
+
+
+</button>
+
+
+</div>
+
+
+
+
+<!-- RETURN PLAN MODAL -->
+
+
+<div class="modal fade"
+
+id="returnPlan">
+
+
+<div class="modal-dialog">
+
+
+<div class="modal-content">
+
+
+<form method="POST"
+
+action="{{ url_for(
+'manager_review.return_plan_route',
+plan_id=plan.id
+)}}">
+
+
+
+<div class="modal-header">
+
+<h5>
+
+Return Plan
+
+</h5>
+
+
+</div>
+
+
+
+
+<div class="modal-body">
+
+
+<textarea
+
+name="comments"
+
+class="form-control"
+
+placeholder="Explain corrections needed..."
+
+required></textarea>
+
+
+</div>
+
+
+
+<div class="modal-footer">
+
+
+<button class="btn btn-secondary"
+
+data-bs-dismiss="modal">
+
+Cancel
+
+</button>
+
+
+<button class="btn btn-warning">
+
+Return Plan
+
+</button>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+{% endblock %}

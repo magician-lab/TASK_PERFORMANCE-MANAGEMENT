@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Operations Manager Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h2>Operations Manager Dashboard</h2>
+
+        <p>
+            Welcome,
+            {{ current_user.full_name }}
+        </p>
+
+    </div>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="stat-card">
+        <h3>{{ employees }}</h3>
+        <p>Employees</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ active_plans }}</h3>
+        <p>Active Plans</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ submitted_plans }}</h3>
+        <p>Submitted Plans</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ pending_reviews }}</h3>
+        <p>Pending Reviews</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ verified_activities }}</h3>
+        <p>Verified Activities</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ assigned_tasks }}</h3>
+        <p>Assigned Tasks</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ due_today }}</h3>
+        <p>Due Today</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ overdue_tasks }}</h3>
+        <p>Overdue Tasks</p>
+    </div>
+
+</div>
+
+<hr>
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>Recent Weekly Plans</h3>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Employee</th>
+
+                <th>Week</th>
+
+                <th>Status</th>
+
+                <th>Created</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for plan in recent_plans %}
+
+            <tr>
+
+                <td>{{ plan.employee.full_name }}</td>
+
+                <td>{{ plan.week_start }} - {{ plan.week_end }}</td>
+
+                <td>{{ plan.status.value }}</td>
+
+                <td>{{ plan.created_at.strftime('%d %b %Y') }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<br>
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>Recently Assigned Tasks</h3>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Employee</th>
+
+                <th>Task</th>
+
+                <th>Date</th>
+
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for task in recent_tasks %}
+
+            <tr>
+
+                <td>{{ task.employee.full_name }}</td>
+
+                <td>{{ task.title }}</td>
+
+                <td>{{ task.task_date }}</td>
+
+                <td>{{ task.status.value }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<br>
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>Notifications</h3>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Title</th>
+
+                <th>Date</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for notification in recent_notifications %}
+
+            <tr>
+
+                <td>{{ notification.title }}</td>
+
+                <td>{{ notification.created_at.strftime('%d %b %Y %H:%M') }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

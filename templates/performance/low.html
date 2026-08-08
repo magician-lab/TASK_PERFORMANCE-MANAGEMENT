@@ -1,0 +1,458 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+
+<!-- HEADER -->
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+
+<h2 class="text-danger">
+
+<i class="bi bi-exclamation-triangle-fill"></i>
+
+Performance Improvement
+
+</h2>
+
+
+<p class="text-muted">
+
+Employees requiring attention and support
+
+</p>
+
+
+</div>
+
+
+
+<a href="{{url_for('performance.overview')}}"
+
+class="btn btn-outline-primary">
+
+
+Back Overview
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- WARNING CARD -->
+
+
+<div class="alert alert-warning">
+
+
+<i class="bi bi-info-circle"></i>
+
+
+Employees below company expectations.
+Managers should review workload,
+training needs and support requirements.
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- EMPLOYEE TABLE -->
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+
+<h5>
+
+Employees Below Target
+
+</h5>
+
+
+</div>
+
+
+
+
+<div class="card-body table-responsive">
+
+
+
+<table class="table table-hover">
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Rank
+
+</th>
+
+
+<th>
+
+Employee
+
+</th>
+
+
+<th>
+
+Overall Score
+
+</th>
+
+
+<th>
+
+Activity Score
+
+</th>
+
+
+<th>
+
+Task Score
+
+</th>
+
+
+<th>
+
+Grade
+
+</th>
+
+
+<th>
+
+Action
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+<tbody>
+
+
+
+
+{% for item in performers %}
+
+
+
+
+<tr>
+
+
+
+<td>
+
+#{{item.company_rank}}
+
+</td>
+
+
+
+
+
+<td>
+
+
+<strong>
+
+{{item.employee.first_name}}
+
+{{item.employee.last_name}}
+
+</strong>
+
+
+<br>
+
+
+<small>
+
+{{item.employee_number}}
+
+</small>
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<h5 class="text-danger">
+
+
+{{item.overall_rating}}
+
+⭐
+
+
+</h5>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{item.activity_score}}%
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{item.assigned_task_score}}%
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-danger">
+
+{{item.performance_grade}}
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<div class="dropdown">
+
+
+<button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+
+data-bs-toggle="dropdown">
+
+
+Actions
+
+
+</button>
+
+
+
+
+<ul class="dropdown-menu">
+
+
+<li>
+
+
+<a class="dropdown-item"
+
+href="{{url_for(
+
+'performance.employee_performance',
+
+employee_id=item.employee_id
+
+)}}">
+
+
+View Profile
+
+
+</a>
+
+
+</li>
+
+
+
+<li>
+
+
+<a class="dropdown-item"
+
+href="{{url_for(
+
+'performance.assigned_task_report',
+
+employee_id=item.employee_id
+
+)}}">
+
+
+Review Tasks
+
+
+</a>
+
+
+</li>
+
+
+
+
+<li>
+
+
+<a class="dropdown-item"
+
+href="{{url_for(
+
+'performance.activity_report',
+
+employee_id=item.employee_id
+
+)}}">
+
+
+Review Activities
+
+
+</a>
+
+
+</li>
+
+
+
+</ul>
+
+
+</div>
+
+
+</td>
+
+
+
+
+</tr>
+
+
+
+{% else %}
+
+
+
+<tr>
+
+
+<td colspan="7"
+
+class="text-center text-success">
+
+
+🎉 No employees below target
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Super Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h2>Super Administrator Dashboard</h2>
+
+        <p>
+            Welcome,
+            {{ current_user.full_name }}
+        </p>
+
+    </div>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="stat-card">
+        <h3>{{ total_users }}</h3>
+        <p>Total Users</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ employees }}</h3>
+        <p>Employees</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ managers }}</h3>
+        <p>Managers</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ admins }}</h3>
+        <p>Super Admins</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ departments }}</h3>
+        <p>Departments</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ active_plans }}</h3>
+        <p>Active Plans</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ completed_plans }}</h3>
+        <p>Completed Plans</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>{{ pending_reviews }}</h3>
+        <p>Pending Reviews</p>
+    </div>
+
+</div>
+
+<hr>
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>Recently Registered Users</h3>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Name</th>
+
+                <th>Employee No.</th>
+
+                <th>Role</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for user in latest_users %}
+
+            <tr>
+
+                <td>{{ user.full_name }}</td>
+
+                <td>{{ user.employee_number }}</td>
+
+                <td>{{ user.role.value }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<br>
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>Recent Login History</h3>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>User</th>
+
+                <th>Time</th>
+
+                <th>IP Address</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for login in recent_logins %}
+
+            <tr>
+
+                <td>{{ login.user.full_name }}</td>
+
+                <td>{{ login.login_time }}</td>
+
+                <td>{{ login.ip_address }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<br>
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>Audit Trail</h3>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>User</th>
+
+                <th>Action</th>
+
+                <th>Date</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for log in audit_logs %}
+
+            <tr>
+
+                <td>{{ log.user.full_name }}</td>
+
+                <td>{{ log.action }}</td>
+
+                <td>{{ log.created_at }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

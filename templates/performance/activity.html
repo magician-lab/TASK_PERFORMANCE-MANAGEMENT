@@ -1,0 +1,821 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+
+<!-- =====================================================
+ HEADER
+===================================================== -->
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+<h2>
+
+<i class="bi bi-list-check"></i>
+
+Activity Performance Report
+
+</h2>
+
+
+<p class="text-muted">
+
+Employee planned activities analysis
+
+</p>
+
+
+</div>
+
+
+
+
+<div>
+
+
+<a href="{{url_for(
+
+'performance.employee_performance',
+
+employee_id=employee.id
+
+)}}"
+
+class="btn btn-outline-primary">
+
+
+<i class="bi bi-person"></i>
+
+Employee Profile
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+ EMPLOYEE INFO
+===================================================== -->
+
+
+<div class="card shadow-sm mb-4">
+
+
+<div class="card-body">
+
+
+<div class="row">
+
+
+<div class="col-md-8">
+
+
+<h3>
+
+{{employee.first_name}}
+
+{{employee.last_name}}
+
+</h3>
+
+
+<p>
+
+Employee Number:
+
+<strong>
+
+{{employee.employee_number}}
+
+</strong>
+
+</p>
+
+
+<p>
+
+Department:
+
+{{employee.department.name
+if employee.department else "N/A"}}
+
+</p>
+
+
+</div>
+
+
+
+
+<div class="col-md-4 text-center">
+
+
+<h1 class="text-primary">
+
+
+{% if activities %}
+
+{{activities[0].performance_percentage
+if activities[0].performance_percentage else 0}}%
+
+{% else %}
+
+0%
+
+{% endif %}
+
+
+</h1>
+
+
+<p>
+
+Latest Activity Score
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ SUMMARY CARDS
+===================================================== -->
+
+
+<div class="row g-3 mb-4">
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Total Reviews
+
+</h6>
+
+
+<h2>
+
+{{activities|length}}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Verified
+
+</h6>
+
+
+<h2 class="text-success">
+
+
+{{
+
+activities
+
+|
+
+selectattr(
+'verification_status',
+'string'
+)
+
+|
+
+list
+
+|
+
+length
+
+}}
+
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Average Score
+
+</h6>
+
+
+<h2>
+
+
+{% if activities %}
+
+
+{{
+
+(
+activities
+|
+map(attribute='activity_score')
+|
+sum
+
+)
+
+/
+
+activities|length
+
+|
+
+round(2)
+
+}}
+
+
+⭐
+
+
+{% else %}
+
+0
+
+{% endif %}
+
+
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Success Rate
+
+</h6>
+
+
+<h2 class="text-success">
+
+
+{% if activities %}
+
+
+{{
+
+(
+
+activities
+
+|
+
+selectattr(
+'final_status',
+'defined'
+)
+
+|
+
+list
+
+|
+
+length
+
+/
+
+activities|length
+
+)
+
+*
+
+100
+
+|
+
+round(2)
+
+}}%
+
+
+{% else %}
+
+0%
+
+{% endif %}
+
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ ACTIVITY TABLE
+===================================================== -->
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+
+<h5>
+
+Activity Review History
+
+</h5>
+
+
+</div>
+
+
+
+
+<div class="card-body table-responsive">
+
+
+
+<table class="table table-hover align-middle">
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+#
+
+</th>
+
+
+<th>
+
+Activity
+
+</th>
+
+
+<th>
+
+Date
+
+</th>
+
+
+<th>
+
+Status
+
+</th>
+
+
+<th>
+
+Quality
+
+</th>
+
+
+<th>
+
+Timeliness
+
+</th>
+
+
+<th>
+
+Score
+
+</th>
+
+
+<th>
+
+Manager Comment
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody>
+
+
+
+{% for activity in activities %}
+
+
+
+<tr>
+
+
+
+<td>
+
+{{loop.index}}
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+{{activity.title}}
+
+</strong>
+
+
+<br>
+
+
+<small>
+
+{{activity.description[:60] if activity.description else ""}}
+
+</small>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{activity.activity_date}}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if activity.final_status.name == "SUCCESSFUL" %}
+
+
+<span class="badge bg-success">
+
+Successful
+
+</span>
+
+
+
+{% elif activity.final_status.name == "UNSUCCESSFUL" %}
+
+
+<span class="badge bg-danger">
+
+Rejected
+
+</span>
+
+
+
+{% else %}
+
+
+<span class="badge bg-warning">
+
+Pending
+
+</span>
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+{{activity.quality_rating}}
+
+⭐
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{activity.timeliness_rating}}
+
+⭐
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+
+{{activity.activity_score}}
+
+
+</strong>
+
+
+/5
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{activity.manager_comments
+or "No comment"}}
+
+
+</td>
+
+
+
+
+</tr>
+
+
+
+
+
+{% else %}
+
+
+
+<tr>
+
+
+<td colspan="8"
+
+class="text-center text-muted">
+
+
+No reviewed activities available.
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ PERFORMANCE FORMULA
+===================================================== -->
+
+
+<div class="alert alert-info mt-4">
+
+
+<i class="bi bi-info-circle"></i>
+
+
+Activity performance is calculated from:
+
+
+<strong>
+
+Quality Rating
+
+</strong>
+
++
+
+<strong>
+
+Timeliness Rating
+
+</strong>
+
+
+divided by 2.
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}

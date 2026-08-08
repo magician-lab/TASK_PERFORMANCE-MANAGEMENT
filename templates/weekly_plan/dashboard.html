@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}
+Weekly Plans
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h2>Weekly Plans</h2>
+
+        <p>
+            Manage your weekly work plans
+        </p>
+
+    </div>
+
+    <div>
+
+        <a href="{{ url_for('weekly_plan.create') }}"
+           class="btn btn-primary">
+
+            + New Weekly Plan
+
+        </a>
+
+    </div>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="stat-card">
+
+        <h2>{{ total_plans }}</h2>
+
+        <span>Total Plans</span>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h2>{{ active_plans }}</h2>
+
+        <span>Active</span>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h2>{{ submitted_plans }}</h2>
+
+        <span>Submitted</span>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h2>{{ completed_plans }}</h2>
+
+        <span>Completed</span>
+
+    </div>
+
+</div>
+
+<br>
+
+{% if current_plan %}
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>
+
+            Current Weekly Plan
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <p>
+
+            <strong>Week</strong>
+
+            {{ current_plan.week_start }}
+
+            -
+
+            {{ current_plan.week_end }}
+
+        </p>
+
+        <p>
+
+            <strong>Status:</strong>
+
+            {{ current_plan.status.value }}
+
+        </p>
+
+        <br>
+
+        <a href="{{ url_for('weekly_plan.view', plan_id=current_plan.id) }}"
+
+           class="btn btn-success">
+
+            View Plan
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<br>
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>
+
+            Previous Weekly Plans
+
+        </h3>
+
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+        <tr>
+
+            <th>Week</th>
+
+            <th>Status</th>
+
+            <th>Action</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for plan in previous_plans %}
+
+        <tr>
+
+            <td>
+
+                {{ plan.week_start }}
+
+                -
+
+                {{ plan.week_end }}
+
+            </td>
+
+            <td>
+
+                {{ plan.status.value }}
+
+            </td>
+
+            <td>
+
+                <a href="{{ url_for('weekly_plan.view', plan_id=plan.id) }}"
+
+                   class="btn btn-sm btn-primary">
+
+                    View
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+
+            <td colspan="3">
+
+                No weekly plans found.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

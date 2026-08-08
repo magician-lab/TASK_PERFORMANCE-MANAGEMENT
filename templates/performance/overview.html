@@ -1,0 +1,936 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+<!-- =====================================================
+ HEADER
+===================================================== -->
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+<h2>
+
+<i class="bi bi-speedometer2"></i>
+
+Performance Overview
+
+</h2>
+
+
+<p class="text-muted">
+
+Monitor employee productivity, execution and ranking
+
+</p>
+
+
+</div>
+
+
+
+<div>
+
+
+<a href="{{url_for('performance.rankings')}}"
+class="btn btn-primary">
+
+
+<i class="bi bi-trophy"></i>
+
+Rankings
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- =====================================================
+ SUMMARY CARDS
+===================================================== -->
+
+
+<div class="row g-3 mb-4">
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body">
+
+
+<h6 class="text-muted">
+
+Total Employees
+
+</h6>
+
+
+<h2>
+
+{{employees|length}}
+
+</h2>
+
+
+<i class="bi bi-people fs-3"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body">
+
+
+<h6 class="text-muted">
+
+Average Performance
+
+</h6>
+
+
+<h2>
+
+
+{% if employees %}
+
+{{
+
+(
+employees|
+map(attribute='overall_percentage')
+|
+sum
+)
+
+/
+
+employees|length
+
+|round(2)
+
+}}%
+
+{% else %}
+
+0%
+
+{% endif %}
+
+
+</h2>
+
+
+<i class="bi bi-graph-up fs-3"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body">
+
+
+<h6 class="text-muted">
+
+Top Performer
+
+</h6>
+
+
+<h5>
+
+
+{% if employees %}
+
+{{employees[0].employee.first_name}}
+
+{% else %}
+
+N/A
+
+{% endif %}
+
+
+</h5>
+
+
+<i class="bi bi-award fs-3"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body">
+
+
+<h6 class="text-muted">
+
+Needs Attention
+
+</h6>
+
+
+<h2>
+
+
+{{
+
+employees|
+
+selectattr(
+'overall_percentage',
+'lt',
+60
+)
+
+|list|length
+
+}}
+
+
+</h2>
+
+
+<i class="bi bi-exclamation-triangle fs-3"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+ SEARCH
+===================================================== -->
+
+
+<div class="card shadow-sm mb-4">
+
+
+<div class="card-body">
+
+
+<div class="row">
+
+
+<div class="col-md-6">
+
+
+<input
+
+type="text"
+
+id="performanceSearch"
+
+class="form-control"
+
+placeholder="Search employee..."
+
+>
+
+
+</div>
+
+
+<div class="col-md-3">
+
+
+<select class="form-select">
+
+
+<option>
+
+All Departments
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+<div class="col-md-3">
+
+
+<select class="form-select">
+
+
+<option>
+
+All Grades
+
+</option>
+
+
+<option>
+
+A
+
+</option>
+
+
+<option>
+
+B
+
+</option>
+
+
+<option>
+
+C
+
+</option>
+
+
+<option>
+
+D
+
+</option>
+
+
+<option>
+
+E
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+ PERFORMANCE TABLE
+===================================================== -->
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+
+<h5 class="mb-0">
+
+Employee Performance Ranking
+
+</h5>
+
+
+</div>
+
+
+
+
+<div class="card-body table-responsive">
+
+
+<table class="table table-hover align-middle"
+id="performanceTable">
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Rank
+
+</th>
+
+
+<th>
+
+Employee
+
+</th>
+
+
+<th>
+
+Employee No.
+
+</th>
+
+
+<th>
+
+Activity
+
+</th>
+
+
+<th>
+
+Assigned Tasks
+
+</th>
+
+
+<th>
+
+Overall
+
+</th>
+
+
+<th>
+
+Grade
+
+</th>
+
+
+<th>
+
+Actions
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+<tbody>
+
+
+
+{% for item in employees %}
+
+
+
+<tr>
+
+
+<td>
+
+
+{% if item.company_rank == 1 %}
+
+🥇
+
+{% elif item.company_rank == 2 %}
+
+🥈
+
+{% elif item.company_rank == 3 %}
+
+🥉
+
+{% else %}
+
+#{{item.company_rank}}
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<strong>
+
+{{item.employee.first_name}}
+
+{{item.employee.last_name}}
+
+</strong>
+
+
+<br>
+
+
+<small class="text-muted">
+
+{{item.employee.email}}
+
+</small>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+{{item.employee_number}}
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<div class="progress">
+
+
+<div class="progress-bar"
+
+style="width:{{item.activity_score}}%">
+
+
+{{item.activity_score}}%
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<div class="progress">
+
+
+<div class="progress-bar bg-success"
+
+style="width:{{item.assigned_task_score}}%">
+
+
+{{item.assigned_task_score}}%
+
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<h5>
+
+
+{{item.overall_percentage}}%
+
+
+</h5>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if item.grade == "A" %}
+
+<span class="badge bg-success">
+
+A
+
+</span>
+
+
+{% elif item.grade == "B" %}
+
+<span class="badge bg-primary">
+
+B
+
+</span>
+
+
+{% elif item.grade == "C" %}
+
+<span class="badge bg-warning">
+
+C
+
+</span>
+
+
+{% elif item.grade == "D" %}
+
+<span class="badge bg-secondary">
+
+D
+
+</span>
+
+
+{% else %}
+
+
+<span class="badge bg-danger">
+
+E
+
+</span>
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<div class="dropdown">
+
+
+<button
+
+class="btn btn-sm btn-outline-secondary dropdown-toggle"
+
+data-bs-toggle="dropdown">
+
+
+Actions
+
+
+</button>
+
+
+
+
+<ul class="dropdown-menu">
+
+
+
+<li>
+
+<a class="dropdown-item"
+
+href="{{url_for(
+
+'performance.employee_performance',
+
+employee_id=item.employee_id
+
+)}}">
+
+
+<i class="bi bi-person"></i>
+
+Profile
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+<li>
+
+
+<a class="dropdown-item"
+
+href="{{url_for(
+
+'performance.activity_report',
+
+employee_id=item.employee_id
+
+)}}">
+
+
+<i class="bi bi-list-check"></i>
+
+Activities
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+<li>
+
+
+<a class="dropdown-item"
+
+href="{{url_for(
+
+'performance.assigned_task_report',
+
+employee_id=item.employee_id
+
+)}}">
+
+
+<i class="bi bi-clipboard-check"></i>
+
+Assigned Tasks
+
+
+</a>
+
+
+</li>
+
+
+
+</ul>
+
+
+</div>
+
+
+
+</td>
+
+
+
+
+
+
+</tr>
+
+
+
+{% else %}
+
+
+
+<tr>
+
+
+<td colspan="8"
+class="text-center">
+
+
+No performance records available
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+<script>
+
+
+document
+.getElementById(
+"performanceSearch"
+)
+.addEventListener(
+"keyup",
+function(){
+
+
+let value=this.value.toLowerCase();
+
+
+
+let rows=document
+.querySelectorAll(
+"#performanceTable tbody tr"
+);
+
+
+
+rows.forEach(
+row=>{
+
+
+row.style.display =
+row.innerText
+.toLowerCase()
+.includes(value)
+?
+""
+:
+"none";
+
+
+});
+
+
+});
+
+
+</script>
+
+
+
+{% endblock %}

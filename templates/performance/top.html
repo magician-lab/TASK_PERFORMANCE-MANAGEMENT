@@ -1,0 +1,416 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+<!-- HEADER -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+<h2>
+
+<i class="bi bi-award-fill"></i>
+
+Top Performers
+
+</h2>
+
+
+<p class="text-muted">
+
+Employees leading company performance
+
+</p>
+
+
+</div>
+
+
+
+<a href="{{url_for('performance.rankings')}}"
+
+class="btn btn-outline-primary">
+
+
+<i class="bi bi-trophy"></i>
+
+Full Ranking
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- TOP CARDS -->
+
+<div class="row g-4 mb-4">
+
+
+{% for performer in performers %}
+
+
+
+<div class="col-md-4">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+{% if loop.index == 1 %}
+
+<h1>
+🏆
+</h1>
+
+
+{% elif loop.index == 2 %}
+
+<h1>
+🥈
+</h1>
+
+
+{% elif loop.index == 3 %}
+
+<h1>
+🥉
+</h1>
+
+
+{% else %}
+
+<h1>
+⭐
+</h1>
+
+
+{% endif %}
+
+
+
+<h4>
+
+
+{{performer.employee.first_name}}
+
+{{performer.employee.last_name}}
+
+
+</h4>
+
+
+
+
+<h2 class="text-success">
+
+
+{{performer.overall_rating}}
+
+⭐
+
+
+</h2>
+
+
+
+<p>
+
+Overall Rating
+
+</p>
+
+
+
+<span class="badge bg-success">
+
+Rank #{{performer.company_rank}}
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- TABLE -->
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+
+<h5>
+
+Performance Champions
+
+</h5>
+
+
+</div>
+
+
+
+
+<div class="card-body table-responsive">
+
+
+
+<table class="table table-hover">
+
+
+
+<thead>
+
+
+<tr>
+
+<th>
+
+Rank
+
+</th>
+
+
+<th>
+
+Employee
+
+</th>
+
+
+<th>
+
+Quality
+
+</th>
+
+
+<th>
+
+Timeliness
+
+</th>
+
+
+<th>
+
+Success
+
+</th>
+
+
+<th>
+
+Rating
+
+</th>
+
+
+<th>
+
+Profile
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+<tbody>
+
+
+
+{% for item in performers %}
+
+
+<tr>
+
+
+<td>
+
+
+🏆 #{{item.company_rank}}
+
+
+</td>
+
+
+
+
+<td>
+
+
+<strong>
+
+{{item.employee.first_name}}
+
+{{item.employee.last_name}}
+
+</strong>
+
+
+<br>
+
+
+<small>
+
+{{item.employee_number}}
+
+</small>
+
+
+</td>
+
+
+
+
+
+<td>
+
+{{item.average_quality}}
+
+⭐
+
+</td>
+
+
+
+
+
+<td>
+
+{{item.average_timeliness}}
+
+⭐
+
+</td>
+
+
+
+
+
+<td>
+
+
+{{item.success_percentage}}%
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<strong>
+
+{{item.overall_rating}}
+
+</strong>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<a href="{{url_for(
+
+'performance.employee_performance',
+
+employee_id=item.employee_id
+
+)}}"
+
+class="btn btn-sm btn-primary">
+
+
+View
+
+
+</a>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}

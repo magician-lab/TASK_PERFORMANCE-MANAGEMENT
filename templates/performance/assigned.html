@@ -1,0 +1,934 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+<!-- =====================================================
+ HEADER
+===================================================== -->
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+
+<h2>
+
+<i class="bi bi-clipboard-check"></i>
+
+Assigned Task Performance
+
+</h2>
+
+
+<p class="text-muted">
+
+Manager assigned work execution report
+
+</p>
+
+
+</div>
+
+
+
+<div>
+
+
+<a href="{{url_for(
+
+'performance.employee_performance',
+
+employee_id=employee.id
+
+)}}"
+
+class="btn btn-outline-primary">
+
+
+<i class="bi bi-person"></i>
+
+Employee Profile
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ EMPLOYEE SUMMARY
+===================================================== -->
+
+
+<div class="card shadow-sm mb-4">
+
+
+<div class="card-body">
+
+
+<div class="row align-items-center">
+
+
+
+<div class="col-md-8">
+
+
+<h3>
+
+{{employee.first_name}}
+
+{{employee.last_name}}
+
+</h3>
+
+
+<p>
+
+Employee No:
+
+<strong>
+
+{{employee.employee_number}}
+
+</strong>
+
+</p>
+
+
+<p>
+
+Department:
+
+{{employee.department.name
+if employee.department else "N/A"}}
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4 text-center">
+
+
+<h1 class="text-success">
+
+
+{{performance.success_percentage}}%
+
+
+</h1>
+
+
+<p>
+
+Task Success Rate
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ STATISTICS CARDS
+===================================================== -->
+
+
+<div class="row g-3 mb-4">
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Total Tasks
+
+</h6>
+
+
+<h2>
+
+{{performance.total_tasks}}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Completed
+
+</h6>
+
+
+<h2 class="text-primary">
+
+{{performance.completed_tasks}}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Verified
+
+</h6>
+
+
+<h2 class="text-success">
+
+{{performance.verified_tasks}}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h6>
+
+Rejected
+
+</h6>
+
+
+<h2 class="text-danger">
+
+{{performance.rejected_tasks}}
+
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ PERFORMANCE METRICS
+===================================================== -->
+
+
+<div class="row mb-4">
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Completion & Verification
+
+</div>
+
+
+<div class="card-body">
+
+
+
+
+
+<label>
+
+Completion Rate
+
+</label>
+
+
+<div class="progress mb-3">
+
+
+<div class="progress-bar bg-info"
+
+style="width:{{performance.completion_percentage}}%">
+
+
+{{performance.completion_percentage}}%
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<label>
+
+Verification Rate
+
+</label>
+
+
+<div class="progress">
+
+
+<div class="progress-bar bg-success"
+
+style="width:{{performance.verification_percentage}}%">
+
+
+{{performance.verification_percentage}}%
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Manager Evaluation
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<table class="table">
+
+
+<tr>
+
+<td>
+
+Quality Rating
+
+</td>
+
+
+<td>
+
+{{performance.average_quality}}
+
+⭐
+
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td>
+
+Timeliness Rating
+
+</td>
+
+
+<td>
+
+{{performance.average_timeliness}}
+
+⭐
+
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td>
+
+Overall Rating
+
+</td>
+
+
+<td>
+
+<strong>
+
+{{performance.overall_rating}}
+
+⭐
+
+</strong>
+
+</td>
+
+
+</tr>
+
+
+
+<tr>
+
+<td>
+
+Grade
+
+</td>
+
+
+<td>
+
+
+<span class="badge bg-primary">
+
+
+{{performance.performance_grade}}
+
+</span>
+
+
+</td>
+
+
+</tr>
+
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ TASK BEHAVIOUR
+===================================================== -->
+
+
+<div class="card shadow-sm mb-4">
+
+
+<div class="card-header">
+
+
+<h5>
+
+Task Behaviour Analysis
+
+</h5>
+
+
+</div>
+
+
+
+
+<div class="card-body">
+
+
+<div class="row text-center">
+
+
+
+
+
+<div class="col-md-3">
+
+
+<h3>
+
+{{performance.acknowledged_tasks}}
+
+</h3>
+
+
+<p>
+
+Acknowledged
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<h3>
+
+{{performance.started_tasks}}
+
+</h3>
+
+
+<p>
+
+Started
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<h3>
+
+{{performance.returned_tasks}}
+
+</h3>
+
+
+<p>
+
+Returned
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<h3 class="text-danger">
+
+{{performance.overdue_tasks}}
+
+</h3>
+
+
+<p>
+
+Overdue
+
+</p>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ STREAK INFORMATION
+===================================================== -->
+
+
+<div class="row mb-4">
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h5>
+
+Current Success Streak
+
+</h5>
+
+
+<h1 class="text-success">
+
+{{performance.current_success_streak}}
+
+🔥
+
+</h1>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<h5>
+
+Best Success Streak
+
+</h5>
+
+
+<h1>
+
+{{performance.best_success_streak}}
+
+🏆
+
+</h1>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+ LAST ACTIVITY
+===================================================== -->
+
+
+<div class="card shadow-sm">
+
+
+<div class="card-header">
+
+Latest Activity
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<table class="table">
+
+
+<tr>
+
+<td>
+
+Last Task Completed
+
+</td>
+
+
+<td>
+
+{{
+
+performance.last_task_completed
+
+or
+
+"Not Available"
+
+}}
+
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td>
+
+Last Task Verified
+
+</td>
+
+
+<td>
+
+{{
+
+performance.last_task_verified
+
+or
+
+"Not Available"
+
+}}
+
+</td>
+
+
+</tr>
+
+
+
+
+<tr>
+
+<td>
+
+Last Calculation
+
+</td>
+
+
+<td>
+
+{{performance.last_calculated}}
+
+</td>
+
+
+</tr>
+
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}

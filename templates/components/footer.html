@@ -1,0 +1,90 @@
+<footer class="app-footer">
+
+    <div class="footer-left">
+
+        <strong>
+            Task Management System
+        </strong>
+
+        <span>
+            &copy; {{ current_year }} All rights reserved.
+        </span>
+
+    </div>
+
+
+    <div class="footer-right">
+
+        <span>
+            Version 1.0.0
+        </span>
+
+
+        <span class="mx-2">
+            |
+        </span>
+
+
+        <span>
+            Developed with ❤️
+        </span>
+
+    </div>
+
+
+</footer>
+
+
+<style>
+
+.app-footer {
+
+    background: #ffffff;
+
+    border-top: 1px solid #e5e7eb;
+
+    padding: 15px 25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    font-size:14px;
+
+    color:#6b7280;
+
+    margin-top:auto;
+
+}
+
+
+.footer-left,
+.footer-right {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+
+
+@media(max-width:768px){
+
+    .app-footer{
+
+        flex-direction:column;
+
+        gap:10px;
+
+        text-align:center;
+
+    }
+
+}
+
+</style>

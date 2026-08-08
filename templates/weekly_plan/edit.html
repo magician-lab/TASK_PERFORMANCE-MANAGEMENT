@@ -1,0 +1,438 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Weekly Plan
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h2>
+
+            Edit Weekly Plan
+
+        </h2>
+
+        <p>
+
+            Update your weekly objectives and activities before submitting to your manager.
+
+        </p>
+
+    </div>
+
+</div>
+
+<form method="POST">
+
+<!-- ========================================= -->
+<!-- WEEKLY DETAILS -->
+<!-- ========================================= -->
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>
+
+            Weekly Information
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Week Number</label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    value="{{ plan.week_number }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Week Start</label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    value="{{ plan.week_start }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Week End</label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    value="{{ plan.week_end }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    value="{{ plan.status.value }}"
+                    readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- ========================================= -->
+<!-- OBJECTIVES -->
+<!-- ========================================= -->
+
+<div class="card">
+
+    <div class="card-header">
+
+        <h3>
+
+            Weekly Objectives
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-group">
+
+            <label>
+
+                Objectives
+
+            </label>
+
+            <textarea
+
+                name="objectives"
+
+                class="form-control"
+
+                rows="5"
+
+                required>{{ plan.objectives }}</textarea>
+
+        </div>
+
+        <br>
+
+        <div class="form-group">
+
+            <label>
+
+                Notes
+
+            </label>
+
+            <textarea
+
+                name="notes"
+
+                class="form-control"
+
+                rows="4">{{ plan.notes }}</textarea>
+
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- ========================================= -->
+<!-- ACTIVITIES -->
+<!-- ========================================= -->
+
+<div class="card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h3>
+
+            Weekly Activities
+
+        </h3>
+
+        <button
+
+            type="button"
+
+            class="btn btn-success"
+
+            onclick="addActivityRow()">
+
+            <i class="fas fa-plus"></i>
+
+            Add Activity
+
+        </button>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered align-middle" id="activitiesTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:18%">Date</th>
+
+                        <th style="width:22%">Title</th>
+
+                        <th>Description</th>
+
+                        <th style="width:15%">Priority</th>
+
+                        <th style="width:70px"></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for activity in plan.activities %}
+
+                    <tr>
+
+                        <td>
+
+                            <input
+                                type="hidden"
+                                name="activity_id[]"
+                                value="{{ activity.id }}">
+
+                            <input
+
+                                type="date"
+
+                                name="activity_date[]"
+
+                                class="form-control"
+
+                                value="{{ activity.activity_date }}"
+
+                                required>
+
+                        </td>
+
+                        <td>
+
+                            <input
+
+                                type="text"
+
+                                name="activity_title[]"
+
+                                class="form-control"
+
+                                value="{{ activity.title }}"
+
+                                required>
+
+                        </td>
+
+                        <td>
+
+                            <textarea
+
+                                name="activity_description[]"
+
+                                class="form-control"
+
+                                rows="2">{{ activity.description }}</textarea>
+
+                        </td>
+
+                        <td>
+
+                            <select
+
+                                name="activity_priority[]"
+
+                                class="form-control">
+
+                                <option value="LOW"
+                                {% if activity.priority=="LOW" or activity.priority.value=="LOW" %}selected{% endif %}>
+                                    LOW
+                                </option>
+
+                                <option value="MEDIUM"
+                                {% if activity.priority=="MEDIUM" or activity.priority.value=="MEDIUM" %}selected{% endif %}>
+                                    MEDIUM
+                                </option>
+
+                                <option value="HIGH"
+                                {% if activity.priority=="HIGH" or activity.priority.value=="HIGH" %}selected{% endif %}>
+                                    HIGH
+                                </option>
+
+                            </select>
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <button
+
+                                type="button"
+
+                                class="btn btn-danger"
+
+                                onclick="removeRow(this)">
+
+                                <i class="fas fa-trash"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="text-end">
+
+    <a
+
+        href="{{ url_for('weekly_plan.view', plan_id=plan.id) }}"
+
+        class="btn btn-secondary">
+
+        Cancel
+
+    </a>
+
+    <button
+
+        type="submit"
+
+        class="btn btn-primary">
+
+        <i class="fas fa-save"></i>
+
+        Save Changes
+
+    </button>
+
+</div>
+
+</form>
+
+<script>
+
+function addActivityRow(){
+
+    let table=document.querySelector("#activitiesTable tbody");
+
+    table.insertAdjacentHTML("beforeend",`
+
+    <tr>
+
+        <td>
+
+            <input type="hidden" name="activity_id[]" value="">
+
+            <input type="date" name="activity_date[]" class="form-control" required>
+
+        </td>
+
+        <td>
+
+            <input type="text" name="activity_title[]" class="form-control" required>
+
+        </td>
+
+        <td>
+
+            <textarea name="activity_description[]" class="form-control" rows="2"></textarea>
+
+        </td>
+
+        <td>
+
+            <select name="activity_priority[]" class="form-control">
+
+                <option value="LOW">LOW</option>
+
+                <option value="MEDIUM" selected>MEDIUM</option>
+
+                <option value="HIGH">HIGH</option>
+
+            </select>
+
+        </td>
+
+        <td class="text-center">
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                onclick="removeRow(this)">
+
+                <i class="fas fa-trash"></i>
+
+            </button>
+
+        </td>
+
+    </tr>
+
+    `);
+
+}
+
+function removeRow(btn){
+
+    btn.closest("tr").remove();
+
+}
+
+</script>
+
+{% endblock %}

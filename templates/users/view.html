@@ -1,0 +1,802 @@
+{% extends "base.html" %}
+
+{% block title %}
+User Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h2>
+
+            <i class="fas fa-user-circle me-2"></i>
+
+            Employee Profile
+
+        </h2>
+
+        <p>
+
+            View employee information and account details.
+
+        </p>
+
+    </div>
+
+    <div>
+
+        <a
+            href="{{ url_for('user.index') }}"
+            class="btn btn-secondary">
+
+            <i class="fas fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- PROFILE SUMMARY -->
+<!-- ===================================================== -->
+
+<div class="card mb-4">
+
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-3 text-center">
+
+                {% if user.profile_photo %}
+
+                <img
+
+                    src="{{ url_for('static', filename=user.profile_photo) }}"
+
+                    class="rounded-circle img-thumbnail"
+
+                    style="width:170px;height:170px;object-fit:cover;">
+
+                {% else %}
+
+                <img
+
+                    src="{{ url_for('static', filename='images/default_user.png') }}"
+
+                    class="rounded-circle img-thumbnail"
+
+                    style="width:170px;height:170px;object-fit:cover;">
+
+                {% endif %}
+
+            </div>
+
+            <div class="col-md-9">
+
+                <h2>
+
+                    {{ user.full_name }}
+
+                </h2>
+
+                <h5 class="text-muted">
+
+                    {{ user.employee_number }}
+
+                </h5>
+
+                <br>
+
+                <span class="badge bg-primary">
+
+                    {{ user.role.name.replace("_"," ") }}
+
+                </span>
+
+                &nbsp;
+
+                {% if user.status.name == "ACTIVE" %}
+
+                    <span class="badge bg-success">
+
+                        Active
+
+                    </span>
+
+                {% elif user.status.name == "LOCKED" %}
+
+                    <span class="badge bg-danger">
+
+                        Locked
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-warning">
+
+                        Inactive
+
+                    </span>
+
+                {% endif %}
+
+                <hr>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <strong>Email</strong>
+
+                        <br>
+
+                        {{ user.email }}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <strong>Phone</strong>
+
+                        <br>
+
+                        {{ user.phone or "-" }}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <strong>Department</strong>
+
+                        <br>
+
+                        {{ user.department.department_name if user.department else "-" }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- PERSONAL INFORMATION -->
+<!-- ===================================================== -->
+
+<div class="card mb-4">
+
+    <div class="card-header">
+
+        <h3>
+
+            <i class="fas fa-id-card me-2"></i>
+
+            Personal Information
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+
+                    Employee Number
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.employee_number }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    First Name
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.first_name }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Middle Name
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.middle_name or '-' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Last Name
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.last_name }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Email Address
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.email }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Phone Number
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.phone or '-' }}"
+                    readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- EMPLOYMENT INFORMATION -->
+<!-- ===================================================== -->
+
+<div class="card mb-4">
+
+    <div class="card-header">
+
+        <h3>
+
+            <i class="fas fa-briefcase me-2"></i>
+
+            Employment Information
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+
+                    Role
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.role.name.replace('_',' ') }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Department
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.department.department_name if user.department else '-' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Reporting Manager
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.manager.full_name if user.manager else '-' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Account Status
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.status.name }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Created On
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.created_at.strftime('%d %B %Y %I:%M %p') if user.created_at else '-' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    Last Login
+
+                </label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.last_login.strftime('%d %B %Y %I:%M %p') if user.last_login else 'Never Logged In' }}"
+                    readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- SECURITY INFORMATION -->
+<!-- ===================================================== -->
+
+<div class="card mb-4">
+
+    <div class="card-header">
+
+        <h3>
+
+            <i class="fas fa-shield-alt me-2"></i>
+
+            Security Information
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Failed Login Attempts</label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.failed_login_attempts }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>First Login</label>
+
+                <input
+                    class="form-control"
+                    value="{{ 'Yes' if user.is_first_login else 'No' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Password Changed</label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.password_changed_at.strftime('%d %B %Y %I:%M %p') if user.password_changed_at else 'Never' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Last Activity</label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.last_activity.strftime('%d %B %Y %I:%M %p') if user.last_activity else '-' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Last Browser</label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.last_browser or '-' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Last Device</label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.last_device or '-' }}"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Last IP Address</label>
+
+                <input
+                    class="form-control"
+                    value="{{ user.last_ip_address or '-' }}"
+                    readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- ACCOUNT STATISTICS -->
+<!-- ===================================================== -->
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card text-center">
+
+            <div class="card-body">
+
+                <i class="fas fa-calendar-check fa-2x text-primary mb-2"></i>
+
+                <h3>{{ user.weekly_plans|length }}</h3>
+
+                <p class="mb-0">Weekly Plans</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card text-center">
+
+            <div class="card-body">
+
+                <i class="fas fa-tasks fa-2x text-success mb-2"></i>
+
+                <h3>{{ user.assigned_tasks|length }}</h3>
+
+                <p class="mb-0">Assigned Tasks</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card text-center">
+
+            <div class="card-body">
+
+                <i class="fas fa-bell fa-2x text-warning mb-2"></i>
+
+                <h3>{{ user.notifications_received.count() }}</h3>
+
+                <p class="mb-0">Notifications</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card text-center">
+
+            <div class="card-body">
+
+                <i class="fas fa-users fa-2x text-info mb-2"></i>
+
+                <h3>{{ user.employees|length }}</h3>
+
+                <p class="mb-0">Direct Reports</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- QUICK ACTIONS -->
+<!-- ===================================================== -->
+
+<div class="card mb-4">
+
+    <div class="card-header">
+
+        <h3>
+
+            <i class="fas fa-bolt me-2"></i>
+
+            Quick Actions
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="d-flex flex-wrap gap-2">
+
+            <a
+                href="{{ url_for('user.edit', user_id=user.id) }}"
+                class="btn btn-primary">
+
+                <i class="fas fa-edit me-1"></i>
+
+                Edit User
+
+            </a>
+
+            <a
+                href="{{ url_for('user.reset', user_id=user.id) }}"
+                class="btn btn-warning">
+
+                <i class="fas fa-key me-1"></i>
+
+                Reset Password
+
+            </a>
+
+            {% if user.status.name == "ACTIVE" %}
+
+            <a
+                href="{{ url_for('user.deactivate', user_id=user.id) }}"
+                class="btn btn-secondary">
+
+                <i class="fas fa-user-slash me-1"></i>
+
+                Deactivate
+
+            </a>
+
+            <a
+                href="{{ url_for('user.lock', user_id=user.id) }}"
+                class="btn btn-danger">
+
+                <i class="fas fa-lock me-1"></i>
+
+                Lock Account
+
+            </a>
+
+            {% elif user.status.name == "LOCKED" %}
+
+            <a
+                href="{{ url_for('user.unlock', user_id=user.id) }}"
+                class="btn btn-success">
+
+                <i class="fas fa-unlock me-1"></i>
+
+                Unlock
+
+            </a>
+
+            {% else %}
+
+            <a
+                href="{{ url_for('user.activate', user_id=user.id) }}"
+                class="btn btn-success">
+
+                <i class="fas fa-check-circle me-1"></i>
+
+                Activate
+
+            </a>
+
+            {% endif %}
+
+            <a
+                href="{{ url_for('user.delete', user_id=user.id) }}"
+                class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to permanently delete this user?');">
+
+                <i class="fas fa-trash me-1"></i>
+
+                Delete
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- RECENT WEEKLY PLANS -->
+<!-- ===================================================== -->
+
+<div class="card mb-4">
+
+    <div class="card-header">
+
+        <h3>
+
+            <i class="fas fa-calendar-week me-2"></i>
+
+            Recent Weekly Plans
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        {% if user.weekly_plans %}
+
+        <table class="table table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>Week</th>
+
+                    <th>Period</th>
+
+                    <th>Status</th>
+
+                    <th>Completion</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for plan in user.weekly_plans[:5] %}
+
+                <tr>
+
+                    <td>{{ plan.week_number }}</td>
+
+                    <td>{{ plan.week_start }} - {{ plan.week_end }}</td>
+
+                    <td>{{ plan.status.name }}</td>
+
+                    <td>{{ "%.0f"|format(plan.completion_percentage) }}%</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="alert alert-info">
+
+            No weekly plans available.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
+<div class="text-end">
+
+    <a
+        href="{{ url_for('user.index') }}"
+        class="btn btn-secondary">
+
+        <i class="fas fa-arrow-left me-1"></i>
+
+        Back to Users
+
+    </a>
+
+</div>
+
+{% endblock %}
